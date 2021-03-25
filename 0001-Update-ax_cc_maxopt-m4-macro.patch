@@ -1,0 +1,125 @@
+From 3a1439f8fa2d1fd8928d6d193da652167f2162b9 Mon Sep 17 00:00:00 2001
+From: Francisco Boni <boboniboni@gmail.com>
+Date: Wed, 24 Mar 2021 23:15:48 -0300
+Subject: [PATCH] Update ax_cc_maxopt m4 macro
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Keeps libffi's specific changes
+(cec3a3a#diff-2396a1256ac4b1c6849c931ddb8018bdd984bb2383be21bb819a33b95d8d603f)
+and updates to the latest ax_cc_maxopt.m4
+(http://git.savannah.gnu.org/gitweb/?p=autoconf-archive.git;a=commit;h=73ee1b396c21062ee8eeb8721ba5323322110fb5):
+
+ax_cc_maxopt.m4: retain setting of CFLAGS by configure
+
+AX_CC_MAXOPT checks whether CFLAGS was set by the user; if so, the user’s
+setting is respected. This behavior is retained, of course.
+
+However, AX_CC_MAXOPT was then setting CFLAGS="". This overrode the default
+setting by configure, which usually includes -g. Hence, if CFLAGS was not
+set by the user, retain the default setting, to preserve the ability to
+debug.
+
+A typical default setting from configure is "-g -O2". This means that
+AX_CC_MAXOPT might typically set CFLAGS to "-g -O2 -O3". This is fine,
+because the later -O3 will override the earlier -O2. (The only assumption is
+that all compilers that AX_CC_MAXOPT knows behave in this sane way.)
+---
+ m4/ax_cc_maxopt.m4 | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
+
+diff --git a/m4/ax_cc_maxopt.m4 b/m4/ax_cc_maxopt.m4
+index 9e7f1ee..027b6d8 100644
+--- a/m4/ax_cc_maxopt.m4
++++ b/m4/ax_cc_maxopt.m4
+@@ -55,7 +55,7 @@
+ #   modified version of the Autoconf Macro, you may extend this special
+ #   exception to the GPL to apply to your modified version as well.
+ 
+-#serial 17
++#serial 18
+ 
+ AC_DEFUN([AX_CC_MAXOPT],
+ [
+@@ -68,19 +68,18 @@ AC_ARG_ENABLE(portable-binary, [AS_HELP_STRING([--enable-portable-binary], [disa
+ 
+ # Try to determine "good" native compiler flags if none specified via CFLAGS
+ if test "$ac_test_CFLAGS" != "set"; then
+-  CFLAGS=""
+   case $ax_cv_c_compiler_vendor in
+-    dec) CFLAGS="-newc -w0 -O5 -ansi_alias -ansi_args -fp_reorder -tune host"
++    dec) CFLAGS="$CFLAGS -newc -w0 -O5 -ansi_alias -ansi_args -fp_reorder -tune host"
+ 	 if test "x$acx_maxopt_portable" = xno; then
+            CFLAGS="$CFLAGS -arch host"
+          fi;;
+ 
+-    sun) CFLAGS="-native -fast -xO5 -dalign"
++    sun) CFLAGS="$CFLAGS -native -fast -xO5 -dalign"
+ 	 if test "x$acx_maxopt_portable" = xyes; then
+ 	   CFLAGS="$CFLAGS -xarch=generic"
+          fi;;
+ 
+-    hp)  CFLAGS="+Oall +Optrs_ansi +DSnative"
++    hp)  CFLAGS="$CFLAGS +Oall +Optrs_ansi +DSnative"
+ 	 if test "x$acx_maxopt_portable" = xyes; then
+ 	   CFLAGS="$CFLAGS +DAportable"
+ 	 fi;;
+@@ -91,8 +90,8 @@ if test "$ac_test_CFLAGS" != "set"; then
+            xlc_opt="-qtune=auto"
+ 	 fi
+          AX_CHECK_COMPILE_FLAG($xlc_opt,
+-		CFLAGS="-O3 -qansialias -w $xlc_opt",
+-               [CFLAGS="-O3 -qansialias -w"
++		CFLAGS="$CFLAGS -O3 -qansialias -w $xlc_opt",
++               [CFLAGS="$CFLAGS -O3 -qansialias -w"
+                 echo "******************************************************"
+                 echo "*  You seem to have the IBM  C compiler.  It is      *"
+                 echo "*  recommended for best performance that you use:    *"
+@@ -105,7 +104,7 @@ if test "$ac_test_CFLAGS" != "set"; then
+                 echo "******************************************************"])
+          ;;
+ 
+-    intel) CFLAGS="-O3 -ansi_alias"
++    intel) CFLAGS="$CFLAGS -O3 -ansi_alias"
+ 	if test "x$acx_maxopt_portable" = xno; then
+ 	  icc_archflag=unknown
+ 	  icc_flags=""
+@@ -146,7 +145,7 @@ if test "$ac_test_CFLAGS" != "set"; then
+ 
+     gnu)
+      # default optimization flags for gcc on all systems
+-     CFLAGS="-O3 -fomit-frame-pointer"
++     CFLAGS="$CFLAGS -O3 -fomit-frame-pointer"
+ 
+      # -malign-double for x86 systems
+      # libffi local change -- don't align double, as it changes the ABI
+@@ -164,7 +163,7 @@ if test "$ac_test_CFLAGS" != "set"; then
+ 
+     microsoft)
+      # default optimization flags for MSVC opt builds
+-     CFLAGS="-O2"
++     CFLAGS="$CFLAGS -O2"
+      ;;
+   esac
+ 
+@@ -176,7 +175,7 @@ if test "$ac_test_CFLAGS" != "set"; then
+ 	echo "* (otherwise, a default of CFLAGS=-O3 will be used)    *"
+ 	echo "********************************************************"
+ 	echo ""
+-        CFLAGS="-O3"
++        CFLAGS="$CFLAGS -O3"
+   fi
+ 
+   AX_CHECK_COMPILE_FLAG($CFLAGS, [], [
+@@ -187,7 +186,6 @@ if test "$ac_test_CFLAGS" != "set"; then
+         echo "* Use ./configure CFLAGS=... to specify your own flags *"
+         echo "********************************************************"
+         echo ""
+-        CFLAGS=""
+   ])
+ 
+ fi
+-- 
+2.30.2
+
