@@ -1,4 +1,18 @@
 Configure miss: _ prefix in compiled symbols
 Configure miss: _ prefix in compiled symbols
+Configure miss: _ prefix in compiled symbols
 Configure miss: g++ option to enable C++11 features
 Configure miss: g++ option to enable C++11 features
+Configure miss: g++ option to enable C++11 features
+Configure miss: i686-generic-linux-gnu-file
+Configure miss: i686-generic-linux-gnu-readelf
+Configure miss: sys/memfd.h
+Configure miss: sys/memfd.h
+Configure miss: sys/memfd.h
+Configure miss: whether compiler supports pointer authentication
+Configure miss: whether compiler supports pointer authentication
+Configure miss: whether compiler supports pointer authentication
+Configure miss: x86_64-generic-linux-gnu-file
+Configure miss: x86_64-generic-linux-gnu-file
+Configure miss: x86_64-generic-linux-gnu-readelf
+Configure miss: x86_64-generic-linux-gnu-readelf
