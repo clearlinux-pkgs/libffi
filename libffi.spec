@@ -7,7 +7,7 @@
 #
 Name     : libffi
 Version  : 3.4.6
-Release  : 39
+Release  : 40
 URL      : https://github.com/libffi/libffi/archive/v3.4.6/libffi-3.4.6.tar.gz
 Source0  : https://github.com/libffi/libffi/archive/v3.4.6/libffi-3.4.6.tar.gz
 Summary  : Library supporting Foreign Function Interfaces
