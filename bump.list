@@ -1,0 +1,17 @@
+darktable
+dpcpp-compiler
+fluidsynth
+gdk-pixbuf
+glib
+guile
+libclc
+llvm
+mozjs115
+p11-kit
+php
+pypi-cffi
+python
+python3
+systemd
+wayland
+xfconf
